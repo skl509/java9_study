@@ -13,13 +13,13 @@ public class Point {
         return this.x;
     }
     public void setX(double x) {
-        this.x=x;
+        this.x = x;
     }
     public double getY() {
         return this.y;
     }
     public void setY(double y) {
-        this.y=y;
+        this.y = y;
     }
 
     public Point translate(double x, double y){ // 특정한 점에서 다른 점(get함수 설정받은 값)까지 이동시키는 메서드
@@ -28,8 +28,8 @@ public class Point {
         return this;
     }
     public Point scale(double s){ // 특정한 점에서 주어진 비율(get함수 설정 받은 값)로 좌표 크기 조절하는 메서드
-        setX(this.x*s);
-        setY(this.y*s);
+        setX(this.x * s);
+        setY(this.y * s);
         return this;
     }
 
