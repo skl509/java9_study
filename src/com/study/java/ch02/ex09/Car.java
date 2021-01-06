@@ -1,64 +1,69 @@
 package com.study.java.ch02.ex09;
 
-import java.util.Scanner;
-
 public class Car {
-    Scanner in = new Scanner(System.in);
+    private double x;     // 변수선언 ,거리
+    private double gallon; // 연료(시간)
+    private double MPS ; // 연비
 
-    private double maile ;
-    private double galon ;
-    private double MPG  ; // 갤런당 마일 단위
-
-
-    public Car(double MPG) {
-
-        this.MPG = maile/galon;
-        this.maile = 0;
-        this.galon = 0;// 생성자 통해서 만들어지는 객체의 초기 속도는 0마일, 연료 넣는것도 0 갤론
-    }
-    public double getMaile(){
-        return maile;
-
+    public Car(double MPS) {  // 생성자 만들기
+        this.MPS = 30; // 1갤런으로 30마일 간다...
     }
 
-    public void setMaile(double maile) {
-        this.maile = maile;
+    public double getX() {
+        return this.x;
     }
 
-    public double getGalon(){
-
-        return galon;
+    public void setX(double x) {
+        this.x = x;
     }
 
-    public void setGalon(double galon) {
-        this.galon = galon;
+    public double getGallon() {
+        return this.gallon;
     }
 
-    public Car drive(Car other){
-
-        return new Car(other.getMaile()); // 지정한 마일만큼 드라이브하는 메서드
-    }
-    public Car fuel(Car other1){
-
-        return new Car(other1.getGalon()); // 지정한 갤런만큼 탱크를 채우는 메서드
+    public void setGallon(double gallon) {
+        this.gallon = gallon;
     }
 
-    public Car distance(Car other2){    // 연료레벨로 현재 거리를 구하는 메서드
-        return new Car(other2.getGalon());
+    public double getMPS() {
+        return this.MPS;
     }
+
+    public void setMPS(double MPS) {
+        this.MPS = MPS;
+    }
+
+    public Car drive(double x) { // 지정한 마일만큼 움직이는 메서드, 연료없으면 그 곳에서 멈춘다...
+        if(this.x <= MPS*this.gallon){
+            setX(this.x + x);
+            return this;}
+        else{
+            setX(this.MPS*this.gallon);
+            return this;
+        }
+    }
+
+    public Car fuel(double gallon) {   // 지정한 수만큼 연료 채우는 메서드
+        setGallon(this.gallon + gallon);
+        return this;
+    }
+
+    public Car distance(double gallon) { // 현제 가지고 있는 연료로 얼만큼 갈 수 있는지 알려주는 메서드, 연료는 내가 지정
+        if(this.x >= MPS*this.gallon){ // 디버깅 하고 알아냈따 여기서도 this.x + x 해줄 필요는 없다 위에서 이미 하고 내려와서...
+            setMPS(0);
+            return this;}
+        else{
+            setMPS(MPS*this.gallon - this.x);
+            return this;
+        }
+    }
+
 
     public static void main(String[] args) {
-
-        Car one = new Car(1);
-        Car two = new Car(2);
-        Car result = one.drive(two);
-
-        System.out.println(result.getMaile());
-
-
-
-
+        Car d = new Car(30).fuel(3).drive(30).distance(3); // 연료 3만큼 넣고 거리를 간다고 설정
+        System.out.println("차가 간 거리 \n" +  d.getX() + " \n연료의 수 \n" +  d.getGallon() + " \n남은 연료로 현제 갈 수 있는 거리 \n" + d.getMPS());
     }
+
 
 
 }
