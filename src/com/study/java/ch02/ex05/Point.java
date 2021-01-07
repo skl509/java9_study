@@ -1,6 +1,6 @@
 package com.study.java.ch02.ex05;
 
-public class Point {
+public class Point { //
 
     private double x;   // 변수선언
     private double y;
