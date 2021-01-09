@@ -1,10 +1,8 @@
 package com.study.java.ch01.ex13;
-import java.util.ArrayList;
-import java.util.Collecttions;
-import java.util.Random;
-import java.math.BigInteger;
-import java.util.Scanner;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,10 +14,10 @@ public class Main {
         }
         System.out.println(" 로또 번호 확인 : " + list.toString());
         System.out.println("섞기 전 : " + list.toString());
-        Collecttions.shuffle(list);
+        Collections.shuffle(list);
         System.out.println("섞은 후 : " + list.toString());
-        for(int = 0; i < 6 ; i++){
-            System.out.println((i+1)+"번째 번호는" + list.get(i) + "입니다")
+        for(int i = 0; i < 6 ; i++){
+            System.out.println((i+1)+"번째 번호는" + list.get(i) + "입니다");
         }
     }
 }
