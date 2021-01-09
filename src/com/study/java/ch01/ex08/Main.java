@@ -7,6 +7,6 @@ public class Main {
         String str = new String();
         String str1 = scan.nextLine();
         str1 = str1.replaceAll(" ", "");
-        System.outprintln(str1);
+        System.out.println(str1);
     }
 }

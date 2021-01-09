@@ -1,3 +1,5 @@
+package com.study.java.ch02.queue;
+
 import java.util.*;
 
 public class pratice1 { //queue 연습
