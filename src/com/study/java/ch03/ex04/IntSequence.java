@@ -12,6 +12,6 @@ interface IntSequence { // 인터페이스에서는 함수만 만들어준다...
             n += Math.pow(10, i) * list[i]; // n = n+Math.pow() * i(배열에 들어간 수)
         }
         return new DigitSequence(n); // 결과값은 DigitSequence 값으로 출력된다 배열이 아니라 int 값으로 나온다...
-    }
+    }//맨처음 출력되는 숫자 951413(처음 3+ 10*1+100*4 ...이런식으로) 그다음 95141
 
 }
