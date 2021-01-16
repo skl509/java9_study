@@ -1,6 +1,6 @@
 package com.study.java.ch03.ex04;
 
-
+import com.study.java.ch03.practice01.DigitSequence;
 
 interface IntSequence { // 인터페이스에서는 함수만 만들어준다...
     boolean hasNext();
