@@ -10,7 +10,9 @@ public class Main {
         strings.add("aa");
         strings.add("aaa");
         strings.add("a");
-        luckySort(strings, (s1, s2) -> s1.length() - s2.length()); //람다식으로 표현
+        strings.add("abc");
+        strings.add("ab");
+        luckySort(strings, Comparator.comparingInt(String::length)); //람다식으로 표현 (문자열도 비교함,comparator 유틸 기능 이용하기)
         System.out.println(strings);
     }
     static void luckySort(ArrayList<String> strings, Comparator<String> c) { //조건식 만들어주기 !=not이다,isSorted가 거짓이면 참이다.
