@@ -776,6 +776,8 @@ public static void repeatMessage(String text, int count){
     
    람다 표현식의 변수처럼 지역 클래스의 메서드 안에서 자신을 감싸는 유효 범위에 속한 변수에 접근이 가능하다.
  
+## 4.상속과 리플렉션
 
+* 4.1 클래스 확장
 
 
