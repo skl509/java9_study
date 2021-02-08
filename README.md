@@ -487,7 +487,7 @@ public class Employee {
 }
 ~~~
 
- * 정적 변수와 정적 메서드
+ * 2.4 정적 변수와 정적 메서드
  
  클래스 안에 변수를 static으로 선언하면 해당 변수는 클래스당 하나만 존재한다. 반면에 각 객체에는 자체적인 인스턴스 변수의 사본이 들어있다.
  ~~~
@@ -519,5 +519,153 @@ public class Employee {
  
  * 2.5 패키지
  
+ 클래스 임포트
+ 
+ import 문을 사용하면 전체 이름을 쓰지 않아도 클래스를 이용할 수 있다.
+ ~~~
+ import java.util.Random;
+ ~~~
  
  
+ * 2.6 중첩 클래스
+ 
+ 클래스를 다른 클래스 내부에 두는 방법을 중첩클래스라고 한다.
+ 
+ 작동방식이 다른 중첩클래스가 두가지가 있다.
+ 
+ 정적 중첩 클래스
+~~~
+public class Invoice { // 물품의 비용을 청구하는 Invoice 클래스 , Item을 중첩클래스로 만든다.
+    private static class Item { // Invoice 내부에 Item에 중첩했다 , Item은 오직 Invoice의 메서드에서만 접근할 수 있다.
+        String description;
+        int quantity;
+        double unitPrice;
+        
+        double price() { return quantity * unitPrice;}
+    }
+    private ArrayList<Item> items = new ArrayList<>();
+    ...
+    }
+ ~~~
+ 
+내부클래스의 객체를 생성하는 메서드
+~~~
+public class Invoice {
+...
+    public void addItem(String description, int quantity, double unitPrice){
+        Item newItem = new Item();
+        newItem.description = description;
+        newItem.quantity = quantity;
+        newItem.unitPrice = unitPrice;
+        items.add(newItem);
+        }
+    }
+
+}
+~~~
+
+## 3.인터페이스와 람다 표현식
+
+* 3.1 인터페이스
+
+단일 메커니즘만 구현하고 이 메커니즘을 클래스간 사용 할 수 있게만들어주는 것이 인터페이스다.
+~~~
+메서드 헤더를 가진 인터페이스를 선언
+public interface IntSequence {
+    boolean hasNext(); // 기본구현을 작성하지 않고 선언만 한 메서드를 추상메서드라한다.
+    int next();
+}
+~~~
+
+인터페이스를 사용하려면 구현을 해야한다.
+
+~~~
+public class SquareSequence implements IntSequence {
+    private int i;
+    
+    public boolean hasNext(){
+        return true;
+    }
+    
+    public int next(){
+        i++;
+        return i*i;
+    }
+}
+~~~
+
+인터페이스 타입으로 변환
+~~~
+IntSequence digits = new DigitSequence(1729);
+double avg = average(digits, 100);
+// digits의 타입은 DigitSequnece가 아니라 IntSequence다.
+IntSequnece 타입 변수는 IntSequence 인터페이스를 구현한 어떤 클래스의 객체라도 참조할 수 있다.
+
+~~~
+
+T타입의 모든 값을 변환 없이 S 타입의 변수에 할당할 수 있다면 S타입은 T타입의 슈퍼 타입이다
+IntSequence 인터페이스는 DigitSequence 클래스의 슈퍼타입이다.
+
+가끔 반대로 변환(슈퍼타입 -> 서브타입)으로 변환 해야할 때도 있다. 이때는 캐스트(강제변한)을 이용하면 된다.
+
+~~~
+IntSequence sequence = ...;
+DigitSequence digits = (DigitSequence) sequence; 
+System.out.println(digits.rest()); //rest()는 DigitSequence의 메서드이므로 캐스트가 필요하다, IntSequence로
+~~~
+
+하지만 잘못 캐스트하면 컴파일 시간 오류나 클래스 캐스트예외가 일어난다.
+
+이것을 방지하기 위해선 instanceof 연산자로 검사해야한다.
+
+인터페이스는 확장(extend)긴으을 제공할수 있다.
+~~~
+public interface Channel extends Closeable{
+    boolean isOpen();
+}
+~~~
+
+* 3.2 인터페이스의 정적 메서드, 기본 메서드, 비공개 메서드
+
+인터페이스에서는 정적 메서드(static~)인 digitsof를 둘 수 있다.
+~~~
+public interface IntSequence {
+...
+    static IntSequence digitsOf(int n){
+        return new DigitSequence(n);
+    }
+}
+~~~
+
+인터페이스에 있는 어느 메서드에서든 기본구현을 작성 할 수 있다. 반드시 defalt 제어자를 붙어여햔다
+
+~~~
+public interface IntSequence {
+    default boolean hasNext() {return true;}
+    int next();
+}
+~~~
+
+비공개 메서드는 static이나 인스턴스 메서드는 될 수 있지만 , default 메서드는(오버라이드 가능) 될 수 없다.
+
+비공개 메서드는 인터페이스 자체에 있는 메서드에서만 쓸 수 있으므로, 인터페이스 안에 있는 다른 메서드의 헬퍼 메서드로만 사용 할 수 있다.
+
+* 3.3 인터페이스의 예
+
+Comparable 인터페이스, 어떤 클래스의 객체를 정렬하려면 Comparable 인터페이스를 구현해야한다.
+
+Comparable 인터페이스는 타입 매개변수를 받는다, 정렬할때 문자열 대 문자열(String), 직원대 직원 식으로 비교하기 때문에
+
+Comparator 인터페이스, 길이가 증가하는 순서로 비교한다. Arrays.sort 메서드를 이용해 배열과 비교자를 매겨변수로 받는다.
+
+Runnable 인터페이스, 특정 일을 정의하려면 Runnable 인터페이스를 구현해야한다. 이 인터페이스에는 메서드가 한 개만 있다.
+
+사용자 인터페이스, 임의의 액션을 취해 미리 지정해둔 코드를 역으로 호출시키는 것.
+
+* 3.4 람다 표현식
+
+람다표현식은 나중에 한 번 이상 실행할 수 있게 전달하는 코드블록.
+
+자바에 함수 표현이 없는 대신에 객체(특정 인터페이스를 구현하는 클래스의 인스턴스)로 함수를 표현한다. 람다표현식은 이런 인스턴스를 생성한다.
+
+
