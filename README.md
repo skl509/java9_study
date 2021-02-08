@@ -700,7 +700,7 @@ Class::staticMethod -> Objects.isNull(x) // 모든 매개변수가 정적 메서
 object::instanceMEthod -> System.out.println(x) // 주어진 객체로 메서드를 호출하여, 매개변수는 인스턴스 메서드로 전달된다.
 ~~~
 
-* 3.6 람다 표현식 처러
+* 3.6 람다 표현식 처리
 
 람다를 사용하는 핵심 목적은 지연실행이다.
 
