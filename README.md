@@ -712,12 +712,71 @@ public static void reapat(int n , Runnable action){ //Runnable 인터페이스 �
 
 * 3.7 람다표현식과 변수 
 
+    람다 표현식 바디의 유효범위는 중첩블록의 유호범위와 같다
+    
+    그러므로 람다 안에 지역변수와 이름이 같은 매개변수나 다른 지역변수를 선언하는 것은 규칙에 어긋난다
+    
+~~~
+int first = 0;
+Comparator<String> comp = (first, second) -> first.length() - second.length();
+// 오류 - first 변수를 0이라고 이미 정의해서...
+~~~
 
+    또한 같은 두 지역변수를 함께 둘 수 없다. 따라서 람다 표현식에도 이름이 같은 지역 변수를 두 개 둘 수 없다.
+    
+    람다 표현식 안에 있는 this 키워드는 해당 람다 표현식을 생성하는 메서드의 this 매개변수를 의미한다.
+    ~~~
+    public class Application(){
+        public void doWork(){
+            Runnable runner = () -> {...; Systme.out.println(this.toString()); ...};
+        }
+    }     
+    ~~~
 
+표현식 this.toString()은 인스턴스가 아니라 Application 객체의 toString 메서드를 호출한다
 
+람다 표현식 안에서 this를 사용한다고 해서 의미는 없다, 람다 표현식 범위는 doWork 메서드 안에 중첩 됨으로 this는 메서드 내부에서 의미가 같다.
 
+~~~
+public static void repeatMessage(String text, int count){
+    Runnable r = () -> { // 람다식이 자신을 감싸는 유효 범위에 정의된 매개변수 text,count에 접근한다
+        for (int i = 0; i <count; i++){
+            System.out.println(text);
+            }
+        };
+            new Thread(r).start();
+            repeatMessage("안녕", 1000);        
+ }
+~~~
+    람다 표현식은 3가지로 구성된다
+    
+    코드블록, 매개변수, 자유변수들의값(자유변수는 매개변수가 아니며 직접 선언한 것도 아닌 변수)
+    위 코드는 text,count란 자유변수 사용(반드시 변 수 값 저장되야됨, 람다식 표현하려면 -> 람다식이 캡처했다)
+    람다식에서는 값이 변하지 않는 변수만 캡쳐 가능하다. 
+    그래서 변수가 아니라 값을 캡쳐한다고 하는것.
+    
+    ~~~
+    for (int i =0; i < n; i++){
+        new Thread( () -> System.out.println(i) ).start();
+      } // i를 캡쳐 할 순 없다. 값이 변하는 변수라서
+   ~~~ 
+    
+    따라서 람다표현식은 자신을 감싸는 유효 범위에 속한 사실상 최종 지역 변수(final)에만 접근 가능하다.
 
-
+ * 3.8 고차함수
+    
+    함수를 처리하거나 반환하는 함수를 고차함수라 한다.
+    람다 표현식은 함수형 인터페이스로 변환 가능하다
+    
+    
+    * 3.9 지역 클래스와 익명 클래스
+    
+    메서드 안에서 클래스를 정의 할 수 있다. 이것이 지역(로컬)클래스 이다.
+    
+    클래스를 지역클래스로 만들면 클래스이름이 메서드의 유효 범위 안에 숨는다. 그리고
+    
+    람다 표현식의 변수처럼 지역 클래스의 메서드 안에서 자신을 감싸는 유효 범위에 속한 변수에 접근이 가능하다.
+ 
 
 
 
