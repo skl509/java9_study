@@ -668,4 +668,56 @@ Runnable 인터페이스, 특정 일을 정의하려면 Runnable 인터페이스
 
 자바에 함수 표현이 없는 대신에 객체(특정 인터페이스를 구현하는 클래스의 인스턴스)로 함수를 표현한다. 람다표현식은 이런 인스턴스를 생성한다.
 
+람다 표현식에 매개변수가 없으면 매개변수가 없는 메서드처럼 빈 괄호를 붙여야한다.
+~~~
+Runnable task = (매개변수 x 빈칸유지) -> {for (int i = 0; i < 1000; i++) doWork(); }
+~~~
+
+람다 표현식은 단일 추상 메서드를 가진 인터페이스(추상 메서드가 한 개만 있는 인터페이스) 자리에 사용 할 수 있다.
+
+이런 인터페이스를 함수형 인터페이스라고 한다.
+~~~
+Arrays.sort(words, (first, second) -> first.length() - second.ength());
+~~~
+내부에서 Arrays.sort 메소드의 두 번째 매개변수는 Comparator<String> 을 구현한 클래스의 객체를 받는다.
+
+함수 리터럴을 지원하는 거의 모든 프로그래밍 언어에서 (String, String) -> int 처럼 함수 타입을 선언하고, 이 함수 타입으로 변수를 선언한 후 함수를 변수에 저장해 호출할 수 있다.
+
+하지만 자바에서는 이 중 하나만 람다 표현식으로 할 수 있다. 
+
+람다 표현식을 함수형 인터페이스 타입 변수에 저장해서 해당 인터페이스의 인스턴스로 변환하는 것이다.
+
+* 3.5 메서드 참조와 생성자 참조
+
+String::compareToIgnoreCase는 람다 표현식(x,y) -> x.compareToIgnoreCase(y)에 대응하는 메서드 참조다.
+
+:: 연산자는 클래스 이름과 메서드 이름을 분리하거나 객체의 이름과 메서드 이름을 분리한다
+
+~~~
+Class::instanceMethod -> x.compareToIgnoreCase(y) // 첫번째 매개변수가 메서드의 수신자가 되고, 나머지 매개변수는 메서드에 전달한다
+Class::staticMethod -> Objects.isNull(x) // 모든 매개변수가 정적 메서드로 전달된다
+object::instanceMEthod -> System.out.println(x) // 주어진 객체로 메서드를 호출하여, 매개변수는 인스턴스 메서드로 전달된다.
+~~~
+
+* 3.6 람다 표현식 처러
+
+람다를 사용하는 핵심 목적은 지연실행이다.
+
+~~~
+repeat(10, () -> System.out.println("안녕"));
+public static void reapat(int n , Runnable action){ //Runnable 인터페이스 이용
+    for(int i = 0; i < n; i++) action.run(); // 람다표현식의 바디는 action.run()이 호출될때 실행
+}
+~~~
+
+* 3.7 람다표현식과 변수 
+
+
+
+
+
+
+
+
+
 
