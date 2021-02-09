@@ -779,5 +779,179 @@ public static void repeatMessage(String text, int count){
 ## 4.상속과 리플렉션
 
 * 4.1 클래스 확장
+    ~~~
+    public class Manager extends Employee {
+        추가된필드
+        추가된 메서드 또는 슈퍼클래스의 메서드를 오버라이드하는 메서드
+    }
+    ~~~
+    
+   extends 키워드는 기존 클래스에서 파생된 새 클래스를 만든다는 것.
+   
+   이때 기존 클래스를 슈퍼클래스(Employee), 새클래스를 서브 클래스(Manager)라고 한다.
+   
+   서브클래스에서 슈퍼클래스 메서드를 수정 할 때도 있다.
+   
+   ~~~
+   public class Manager extends Employee {
+   ...
+    public double getSalary(){ // 슈퍼클래스의 메서드를 오버라이드 한다.
+        return super.getSalary() + bonus; //getSalary는 직원의 총급여를 보고하는 메서드
+    }
+   }
+    ~~~
+    상속받은 getSalary 메서드로는 Manager 클래스로 나타내는 관리자의 급여를 계산 못하기때문에
+    
+    Manager 클래스에서 getSalary 메서드를 오버라이드해서 이 메서드가 기본 급여와 상여금의 합을 반환하게 한다.
+    
+    ~~~
+    public class Manager extends Employee {
+    ...
+        public boolean worksFor(Manager supervisor){
+        ...
+        }
+    }
+        @Override public boolean worksFor(Employee suprervisor)
+    ~~~
+    
+  @override 애너테이션을 붙이면 새 메서드를 정의했을때 오류를 막을 수 있다.
+  
+  
+    ~~~
+    public class Employee {
+    ...
+        public final String getName() {
+            return name;
+        }
+    }
+    ~~~
+    
+    메서드를 final로 선언하면 어느 서브클래스도 해당 메서드를 오버라이드 할 수 없다.
+    
+    ~~~
+    public abstract class Person { // abstract 추상메서드
+        private String name;
+        
+        public Person(String name) { this.name = name;}
+        public final STring getName() { return name; }
+        
+        public abstract in getId();
+    }
+    ~~~
+    
+    클래스는 구현이 없는 메서드를 선언해 섭클래스가 해당 메서드를 구현하도록 강제할수 있다.(추상 메서드)
+    
+    추상클래스는 인스턴스를 생성할 수 없다. 그러나 인스턴스 변수와 생성자를 포함 할 수 있다.
+    
+    ~~~
+    ArrayList<String> names = new ArrayList<String>(100){
+        public void add(int index, String element) {
+            super.add(index, element);
+            System.out.printf("Adding %s at #d\n", element, index);
+            } // 슈퍼클래스 이름 뒤에 오는 괄호 안 인수는 슈퍼클래스 생성자에 전달된다. 여기서는 ArrayList<String>의 익명 서브클래스를 생성하면서 add 메서드를 오버라이드했다.
+            // 인스턴스 초기 용량은 100으로 설정된다.
+     };
+    ~~~
+   
+    슈퍼클래스를 확장하는 익명 클래스도 만들 수 있다. 익명 서브클래스는 디버깅에 유용하다.
+    
+    ~~~
+    ArrayList<String> friends = new ArrayList<>();
+    friends.add("Harry");
+    friends.add("Sally");
+    invite(friends);
+    invite(new ArrayList<String>() {{ add("Harry"); add("Sally"); }});
+    ~~~
+    
+    이중 중괄호 초기화는 내부 클래스 문법을 약간 특이하게 사용한다. 
+    
+    바깥중괄호는 ArrayList<String>의 익명 서브클래스를 만든다. 안쪽 중괄호는 초기화 블록 이다.
+    
+    ~~~
+    public interface Named{
+        default String getName() { return ""; }
+    }
+    
+    public class Person {
+    ...
+    public STring getName() { return name; }
+    }
+    
+    public class student extends Person implements Named {
+    ...
+    }
+    ~~~
+    
+    클래스와 인터페이스에 있는 메서드의 이름이 같은 경우, 항상 슈퍼클래스 구현이 인터페이스 구현보다 우선된다.
+    
+    ~~~
+    public class Worker {
+        public void work() {
+            for (int i = 0; i > 100; i++) System.out.println("Working");
+            }
+        }
+    public class ConcurrentWorker extends Worker {
+        public void work(){
+            Thread t = new Thread(super::work);
+            t.start();
+            } // ConcurrentWorker의 work 메서드는 run 메서드에서 슈퍼클래스(Worker)의 work 메서드를 호출하는 Runnable로 스레드를 생성한다.
+       }
+    ~~~
+    
+    Object::instanceMethod 형태로 사용할 수 있다. 이때 객체 참조 대신 super를 사용 할 수 있다.
+    
+    * 4.2 Object: 보편적 슈퍼클래스
+    
+    자바에서 모든 클래스는 직간접적으로 Object 클래스를 확장한다. 클래스에 명시적인 슈퍼클래스가 없으면 암시적으로 Object를 확장한다.
+    
+    toString 메서드는 객체의 문자열 표현을 반환해준다
+    ~~~
+    public String toString(){
+        return getClass().getName() + "[name=" + name + ",salary=" + salary + "]";
+        }
+    ~~~
+    
+    toString 메서드는 주로 클래스 이름 뒤에 인스턴스 변수 목록을 대괄호([])로 감싸서 나열한다
+    
+    equals 메서드는 한 객체가 다른 객체아 동등한지 검사한다.
+    
+    ~~~
+    public class Item {}
+        private String description;
+        private double pice;
+        ...
+        public boolean equals(Object otherObject){
+        // 두 객체가 동일한지 알아보는 빠른검사
+        if (this == otherObject) return true;
+        
+        // 매개변수가 null이면 false를 반환해야 한다.
+        if (otherObject == null) return false;
+        // otherObject가 Item의 인스턴스인지 검사한다.
+        if (getClass() != otherObject.getClass()) return false;
+        // 인스턴스 변수들의 값이 도일한지 검사한다.
+        Item other = (Item) otherObject;
+        return Objects.equals(description, other.description)
+            && price == other.price;
+            }
+           
+           public int hasCode() {...} 
+           
+        }
+    ~~~
+          
+    equals 메서들 구현할 때 거쳐야하는 단계
+    
+    1.일반적으로 동등한 객체느 동일하며, 검사 비용이 적게든다
+    
+    2. 모든 equals 메서드는 null과 비교하면 false를 반환해야한다
+    
+    3. equals 메서드는 Object.equals를 오버라이드하므로 매개변수의 타입은 Object이다.
+      
+       따라서 인스턴스 변수를 조사할 수 있도록 실제 타입으로 캐스트해야한다. 캐스트 하기 전에 getClass 메서드나 instanceof 연산자로 타입 검사를 수행한다.
+       
+    4. 마지막으로 인스턴스 변수를 비교한다. 기본 타입은 ==dustkswkfh qlrygksek   
+   
 
-
+    hasCode 메서드는 
+    
+    
