@@ -941,7 +941,7 @@ public static void repeatMessage(String text, int count){
           
     equals 메서들 구현할 때 거쳐야하는 단계
     
-    1.일반적으로 동등한 객체느 동일하며, 검사 비용이 적게든다
+    1. 일반적으로 동등한 객체느 동일하며, 검사 비용이 적게든다
     
     2. 모든 equals 메서드는 null과 비교하면 false를 반환해야한다
     
@@ -949,7 +949,7 @@ public static void repeatMessage(String text, int count){
       
        따라서 인스턴스 변수를 조사할 수 있도록 실제 타입으로 캐스트해야한다. 캐스트 하기 전에 getClass 메서드나 instanceof 연산자로 타입 검사를 수행한다.
        
-    4. 마지막으로 인스턴스 변수를 비교한다. 기본 타입은 ==dustkswkfh qlrygksek   
+    4. 마지막으로 인스턴스 변수를 비교한다. 기본 타입은 == 연산자로 비교한다  
    
 
     hasCode 메서드는 
