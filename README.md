@@ -939,7 +939,7 @@ public static void repeatMessage(String text, int count){
         }
     ~~~
           
-    equals 메서들 구현할 때 거쳐야하는 단계
+    equals 메서드를 구현할 때 거쳐야하는 단계
     
     1. 일반적으로 동등한 객체느 동일하며, 검사 비용이 적게든다
     
@@ -952,6 +952,99 @@ public static void repeatMessage(String text, int count){
     4. 마지막으로 인스턴스 변수를 비교한다. 기본 타입은 == 연산자로 비교한다  
    
 
-    hasCode 메서드는 
+    해시코드(hasCode) 는 객체에서 파생한 정수 값이다. 해시 코드는 중복되지 않게 잘 뒤섞여 있어야한다.
     
+    ~~~
+    class Item{
+    ...
+    public int hashCode() {
+        return Objects.hash(description, price);
+        }   
+    }
+    ~~~
+    hashCode 메서드 안에서 인스턴스 변수의 해시 코드를 단순히 결합하면 된다. 
+    
+    가변 인수 메서드 Objects.hash는 인수들의 해시 코드를 계싼해 결합한다. Objects.hash 메서드는 널에 안전하다.
+    
+    
+    * 4.3 열거
+    
+    열거 타입의 각 인스턴스는 유일하므로 열거 타입 값에 equals 메서드를 사용할 필요가 전혀없다. 열거 타입 값을 비교할 때는 그냥 ==를 사용한다.
+    
+    원한다면 열거 타입에 생성자, 메서드, 필드를 추가 할 수 있다.
+    
+    ~~~
+    public enum Size{
+    SMALL("S"), MEDIUM("M"), LARGE("L"), EXTRA_LARGE("XL");
+    
+    private String abbreviation;
+    
+    Size(String abbreviation) {
+        this.abbriation = abbreviation;
+    }
+    public String getAbbreviaton() { eturn abbreviation;}
+    }
+    ~~~
+    
+    enum 인스턴스 각각에 메서드를 추가 할 수 있찌만, 열거에 정의된 메서드를 오버라이드하는 것이어야한다.
+    ~~~
+    public enum OPeration {
+    ADD {
+        public int eval(int arg1, int arg2) { return arg1 + arg2; }
+    },
+        SUBTRACT {
+           public int eval(int arg1, int arg2) { return arg1 - arg2;}
+    }.
+        MULTIPLY {
+           public int eval(int arg1, int arg2) { return arg1 * arg2;}
+    },
+        DIVIVDE {
+            public int eval(int arg1, int arg2) { return arg1 / arg2;}
+    },
+        public abstract int eval(int arg1, int arg2);
+        Operation op = ...;
+        int result = op.eval(first, second);
+    }
+    ~~~
+    계산기 프로그램의 루프에서는 사용자 입력에 따라 이 값중 하나를 변수에 설정한 후 eval을 호출하면 된다.
+    
+    열거에는 정적 멤버를 넣을 수 있다. 하지만 생성 순서에 주의해야 한다.
+    ~~~
+    public enum Modifier {
+        PUBLIC, PRIVATE, PROECTED, STATIC, FINAL, ABSTRACT;
+        private static int maskBit = 1;
+        private int mask;
+        Modifier() {
+            mask = maskBit; // 오류 - 생성자에서 정적 변수에 접근할 수 없다.
+            maskBit *= 2;
+            }
+            ...
+    }
+    ~~~
+    
+    해결방안은 블록 초기화다
+    
+    ~~~
+    public enum Modifier {
+          PUBLIC, PRIVATE, PROECTED, STATIC, FINAL, ABSTRACT;
+          private int mask;
+          
+          static { // 정적 초기화 블록에서 초기화 해준다...
+            int maskBit =1;
+            for (Modifier m : Modifier.values()) {
+                m.mask = maskBit;
+                maskBit *= 2;
+                }
+            }
+                ...
+        }
+    ~~~
+  열거 상수가 생성되고 나면 정적 변수 초기화와 정적 초기화 블록이 평소처럼 위쪽에서 차례로 실행된다.
+  
+  
+  
+  
+  * 4.4 실행 시간 타입 정보와 리소스
+  
+  
     
