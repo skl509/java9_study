@@ -21,7 +21,7 @@ public class Item {
         // 인스턴스 변수들의 값이 동일한지 검사한다.
         Item other = (Item) otherObject;
         return Objects.equals(description, other.description)
-            && price == other.price;
+            && price == other.price; // 마지막으로 description과 price 동일한지 확인.
     }
     
     public int hashCode() {

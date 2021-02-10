@@ -3,7 +3,7 @@ package com.study.java.ch04.practice04;
 public class ClassDemo {
     public static void main(String[] args) throws ReflectiveOperationException {
         Object obj = System.out;
-        Class<?> cl = obj.getClass();
+        Class<?> cl = obj.getClass(); //getClass 메서드는 Class 클래스이 객체를 돌려줌, <?>6장에서 설명
         
         System.out.println("This object is an instance of " + cl.getName());
 

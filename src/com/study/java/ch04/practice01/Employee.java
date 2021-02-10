@@ -1,4 +1,4 @@
-package com.study.java.ch04.practice01;
+package com.study.java.ch04.practice01; //2장에서 복사해온 소스
 
 import com.study.java.ch03.practice02.Identified;
 import com.study.java.ch03.practice02.Person;

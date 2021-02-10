@@ -14,6 +14,6 @@ public class Manager extends Employee { //상속받은것 Employee 클래스 비
     
     public double getSalary() { // 슈퍼클래스의 메서드를 오버라이드한다.
         return super.getSalary() + bonus;
-    }
+    } //보호된 변수인 salary에 접근할수 있다.
 
 }

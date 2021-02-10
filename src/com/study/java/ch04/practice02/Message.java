@@ -24,7 +24,7 @@ public final class Message {
                 = (ArrayList<String>) recipients.clone();
             cloned.recipients = clonedRecipients; 
             return cloned;
-        } catch (CloneNotSupportedException ex) {
+        } catch (CloneNotSupportedException ex) { //5장 로깅에서 자세히 설명, 검사예외설명하는 이유
             return null;
         }
     }

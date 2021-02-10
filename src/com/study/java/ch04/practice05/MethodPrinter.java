@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class MethodPrinter {
-    public static void main(String[] args) throws ReflectiveOperationException {
+    public static void main(String[] args) throws ReflectiveOperationException { // 15장 자바 플렛폼 모듈에서 설명
         System.out.print("Class name: ");
         Scanner in = new Scanner(System.in);
         String className = in.nextLine();

@@ -6,7 +6,7 @@ import java.util.ServiceLoader;
 public class ServiceLoaderDemo {
     public static ServiceLoader<Cipher> cipherLoader = ServiceLoader.load(Cipher.class);
 
-    public static void main(String[] args) throws UnsupportedEncodingException {
+    public static void main(String[] args) throws UnsupportedEncodingException { //8장 스트림 에서 자세히 설명
         int strength = args.length == 0 ? 1 : Integer.parseInt(args[0]);
         Cipher cipher = getCipher(strength);
         String message = "Meet me at the toga party.";

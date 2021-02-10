@@ -5,13 +5,14 @@ import java.util.Arrays;
 
 public class ArrayReflection {
     public static Object[] badCopyOf(Object[] array, int newLength) { // 유용하지 않다.
-        Object[] newArray = new Object[newLength];
+        Object[] newArray = new Object[newLength]; // 자바 배열은 요소의 타입을 기억한다,Object 맞춰주기
         for (int i = 0; i < Math.min(array.length, newLength); i++)
             newArray[i] = array[i];
         return newArray;
     }
     
-    public static Object goodCopyOf(Object array, int newLength) {
+    public static Object goodCopyOf(Object array, int newLength) { // 어떤 타입의 배열이든 길이를 늘릴 수 있다.
+                                                                    // 매개변수 타입은 Object , Object[] x
         Class<?> cl = array.getClass();
         if (!cl.isArray()) return null;
         Class<?> componentType = cl.getComponentType();

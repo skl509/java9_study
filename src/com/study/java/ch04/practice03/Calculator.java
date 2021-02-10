@@ -1,4 +1,4 @@
-package com.study.java.ch04.practice03;
+package com.study.java.ch04.practice03; // Operation 기능 테스트
 
 import java.util.Scanner;
 
