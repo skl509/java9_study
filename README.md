@@ -1084,7 +1084,7 @@ public static void repeatMessage(String text, int count){
     
     ## 5.기본 프로그래밍 구조
     
-   * 예외 처리
+   * 5.1 예외 처리
    
    메서드에서 해야 할일을 할 수 없는 상황이 발생하면, 메서드에서 오류 코드를 반환해야한다.
    
@@ -1104,8 +1104,6 @@ public static void repeatMessage(String text, int count){
    
    비검사예외(unchecked excepiton)의 서브클래스이고 다른 예외는 모두 검사 예외(checked exception)이다.
    
-   메서드 헤더에 검사 예외 선언을 해야한다.
-   
    ~~~
    public class FileFormatException extends IOException {
     public FileFormatException() {}
@@ -1116,4 +1114,149 @@ public static void repeatMessage(String text, int count){
   }
    ~~~ 
   많은 예외 클래스 중에 상황에 맞는 예외 클래스를 사용한다.
+  
+   메서드 헤더에 검사 예외 선언을 해야한다.
+   ~~~
+  public void write(Object obj, String filename)
+    throws IOException, ReflectiveOperationException //메서드 헤더에 thorow 문 쓰기
+    ~~~
+    
+    메서드에서 throw 문을 사용하기 위해서든, throws 절이 있는 또 다른 메서드를 호출하기 위해서든 해당 메서드가 던질 수 있는 예외를 모두 나열해야한다.
+    
+    메서드를 오버라이드 할 때 슈퍼클래스 메서드에서 선언한 예외보다 광범위한 검사 예외는 던질 수 없다.
+    
+    ~~~
+    public void write(Object obj, String filename)
+        throws FileNotFoundException
+    ~~~
+    
+    write 메서드를 오버라이드 할때, 그 메서드에서는 그보다 범위가 좁은 예외만 던질 수 있다.
+   
+   예외 잡기를 할려면 try 블록을 사용해야한다.
+   
+   ~~~
+   try{
+    statements
+    } catch (ExceptionClass ex){
+        handler
+        }
+    ~~~
+    
+    try 블록에 들어있느 statements를 실행하다가 주어진 예외클래스가 일어나면 제어가 handler로 이동한다.
+    
+    이 구조를 2가지로 바꿀 수 있다.
+    
+    ~~~
+    1.
+    try {
+        statements
+        } catch (ExceptionClass1 ex){
+            handler1
+            } catch (ExceptionClass2 ex){
+                handler2
+                } catch (ExceptionClass3 ex){
+                    }
+     ~~~
+     catch 절 부터 일치하는 예외 타입을 찾고 없으면 내려온다, 위쪽 부터 가장 상세한 예외클래스를 배치한다
+    
+     ~~~
+      2.
+      try {
+        statements
+        } catch (ExceptionClass2 :(짝대기 긴거 2개 가운데 점있는거) ExceptionClass2 : ExceptionClass3 ex){
+        handler
+        }
+     ~~~
+        
+   이경우 핸들러는 나열된 예외 클래스에 공통으로 있는 메서드만 예외 변수 ex로 호출 할 수 있다.
+   
+   
+   예외처리가 필요한 문제 중 하나는 리소스 관리이다.
+   
+   ~~~
+   ///파일에 쓰기를 수행하고, 수행이 완료하면 파일을 닫는다...
+   ArrayList<String> lines = ...;
+   PrintWriter out = new PrintWriter("output.txt");
+   for (String line : lines) {
+    out.println(line.toLowerCase());
+    }
+    out.close();
+    ~~~
+    
+    이 코드는 어떤 메서든 예외를 던지면 out.close()가 호출되지 않는다. 
+    
+    이런 상황은 좋지않다, 예외가 여러번 일어나서 시스템이 파일핸들을 소진 시킬 수 있기 때문이다.
+    
+    ~~~
+    ArrayList<String> lines = ...;
+    try (PrintWriter out = new PrintWriter("output.txt")){// 변수선언
+        for (String line : lines)
+            out.println(line.toLowerCase());
+            }
+    ~~~
+    
+    try 문 헤더에 리소스를 지정 할 수 있다. 리소스에 반드시 AutoCloseable 인터페이스를 구현하는 클래스에 속해야한다.
+    
+    ~~~
+    try (PrintWriter out = new PrintWriter("output.txt"){
+        for (String line : lines){
+            out.println(line.toLowerCase());
+            }
+         }// out.close()가 호출된다.
+    ~~~
+    정상적으로 try 블록의 끝에 이르렀든 예외가 일어났든 간에 try 블록이 끝날 때 리소스 객체의 close 메서드가 호출된다.
+    
+    ~~~
+    try (Scanner in = new Scanner(Paths.get("/usr/share/dict/words")); // 리소스1 지정
+            printWriter out = new PrintWriter("output.txt")){   // 리소스2 지정
+            while (in.hasNext())
+                out.println(in.next().toLowerCase());
+                }
+    ~~~
+    
+    여러 리소스를 세미콜론으로 구분해 선언 할 수 있다.
+    
+    리소스는 초기화 순ㅅ의 역순으로 닫는다, out.close()가 in.close() 보다 먼저 호출된다
+    
+    PrintWriter 생성자에서 예외를 던진다 할때, 이시점에서 in은 이미 초기화 되었지만 out은 아니다.
+    
+    try문은 in.close()를 호출하고 예외를 전파한다.
+    
+    finally 절은 정상적으로든 예외가 일어나든 try 블록이 끝날 때 실행된다.
+    
+    ~~~
+    try {
+        작업을 수행한다.
+        } finally {
+            정리 작업을 한다.
+            }
+    ~~~
+    
+    이런 패턴은 잠금을 획득,해제하거나 카운터를 증가,감소시킬 때 스택에 무언가를 넣었다가 작업을 마치고 꺼낼 때 사용한다.
+    
+   finally 절에서는 예외를 던지면 안된다, try 블록의 바디가 예외를 종료하더라도 finally 절에 일어난 예외로 덮어쓰기 때문이다.
+   
+   finally 절에서는 return 문도 작성하면 안된다. 이유는 이하동문이다.
+   
+   예외를 어디에서도 잡지 않으면 스택 추적이 표시된다.
+   
+   예외의 스택추적내용을 저장 하고 싶을때는 다음 문자열에 집어넣으면 된다.
+   
+   ~~~
+   ByteArrayOutputStream out = new ByteArrayOutputStream();
+   ex.printStactTrace(new PrintWriter(out));
+   String descripton = out.toString();
+   ~~~
+         
+   * 5.2 단정
+   
+   단정은 일반적으로 사용하는 방어적 프로그래밍 방법이다.
+   
+   ~~~
+   double y = Math.sqrt(x);
+   
+   
+    
+   
+   
    
