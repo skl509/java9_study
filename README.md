@@ -1082,4 +1082,38 @@ public static void repeatMessage(String text, int count){
     getSalary/setSalary 쌍은 salary라는 프로퍼티를 만들어야한다. 하지만 접미어의 처음 두글자가 대문자면 그대로 대문자를 써준다.
     
     
+    ## 5.기본 프로그래밍 구조
     
+   * 예외 처리
+   
+   메서드에서 해야 할일을 할 수 없는 상황이 발생하면, 메서드에서 오류 코드를 반환해야한다.
+   
+   오류코드 반환은 효율적이지 않음으로 자바에서는 예외 처리를 지원하므로 메서드에서 예외를 던지는 방법으로 심각한 문제를 알릴수있다.
+   
+   ~~~
+   public static int randInt(int low, int high){
+    return low + (int) (Math.random() * (high - low + 1));
+   }
+   if(low > high)
+    throw ne IllegalArgumentException(
+        String.format("low should be <= high but low is %d and high is %d", low, high));
+   ~~~
+   randInt(10,5) 를 호출하면 오류 발생이다. 그러니 throw 문을 실행 시켜서 randInt 메서드 실행을 멈추고 호출하는 쪽에 값을 반환하지 않는다.
+   
+   프로그래머가 보고하는 예외는 Exception 클래스의 서브클래스다
+   
+   비검사예외(unchecked excepiton)의 서브클래스이고 다른 예외는 모두 검사 예외(checked exception)이다.
+   
+   메서드 헤더에 검사 예외 선언을 해야한다.
+   
+   ~~~
+   public class FileFormatException extends IOException {
+    public FileFormatException() {}
+    public FileFormatException(String message) {
+        super(message);
+    }
+  /// 연쇄된 예외용 생성자도 추가한다...
+  }
+   ~~~ 
+  많은 예외 클래스 중에 상황에 맞는 예외 클래스를 사용한다.
+   
