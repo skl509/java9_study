@@ -1273,4 +1273,50 @@ public static void repeatMessage(String text, int count){
    
    * 5.3 로깅
    
+   로깅 시스템은 기본 로거를 이용한다 정보 메시지를 로그로 기록할 때는, info 메서드를 사용한다.
+   
+   ~~~
+   Logger.getGlobal().info("Opening file " + filename);
+   // Aug 04, 2014 09:53:34 AM com.mycompany.Myclass read InFO: Opening file data.txt
+   ~~~
+   
+   로그를 기록한 시각과 호출 클래스나 메서드의 이름이 자동으로 포함된다.
+   
+   전문적인 애플리케이션에서는 보통 전역 로거 하나로 모든 레코드를 로그로 기록하려고 하지 않는다.
+   
+   그 대신 로거를 직접 정의해서 사용한다.
+   
+   ~~~
+   Logger logger = Logger.getLogger("com.mycompany.myapp");
+   ~~~
+   
+   이후 같은 이름으로 로거를 요청하면 같은 로거 객체를 얻는다.
+   
+   로깅 레벨은 일곱 가지로 SEVER, WARNING , INFO , COFIG, FINE, FINER, FINEST가 있다. 기본설정으로 상위 레벨 세 개만 로그로 기록한다.
+   
+   ~~~
+   logger.setLevel(Leval.FINE);
+   ~~~
+   
+   FINE 이상인 레벨을 모두 로그로 기록한다
+   
+   구성 파일을 편집하면 로깅 시스템의 다양한 ㅡ로퍼티를 변경할 수 있다. 기본 구성 파일은 conf/logging.properties다.
+   
+   다른 파일을 사용하려면 애플리케이션을 시작할때 java.util.logging.config.file 프로퍼티를 원하는 파일 위치로 설정해야한다.
+   
+   직접 만든 로거의 로깅 레벨을 지정할 수 있다.
+   
+   ~~~
+   com.mycompany.myapp.level = FINE
+   ~~~
+   
+   로그 핸들러는 콘솔에 메시지를 보낸다.
+   
+   로거와 마찬가지로 로그 핸들러에게도 로깅 레벨이 있다.
+   
+   레코드를 로그로 기록하려면 헤당 레코드의 로깅 레벨이 로거와 핸들러의 임계값 이상이여야 한다.
+   
+   로깅 레벨로 필터링하는 방법 외에도 Filter 인터페이스를 구현한 필터를 로거나 핸들러에 추가로 설치해 필터링 하는 방법도 있다.
+   
+   
    
