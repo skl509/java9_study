@@ -1253,10 +1253,24 @@ public static void repeatMessage(String text, int count){
    단정은 일반적으로 사용하는 방어적 프로그래밍 방법이다.
    
    ~~~
-   double y = Math.sqrt(x);
+   double y = Math.sqrt(x); //특정 프로퍼티가 채워졌다고 확산하는 코드에서 해당 프로퍼티에 의존한다...
+   if (x<0) throw new IllegalStateExeption(x + " < 0 ");
+   ~~~ 
    
+   이때 x는 음수가 아니라고 확신한다, 그럼에도 계산에서는 숫자가 아닌 부동소수점 값이 나타나지 않도록 확인해야한다
    
+   하지만 이 조건문은 테스트를 마친 후에도 프로그램에 남아서 실행을 느리게 한다, 단정 메커니즘을 이용하면 테스트 중에만 검사를 하고, 제품용 코드에서는 자동으로 삭제 할 수 있다.
     
+   단정 사용 형태는 두가지이다.
    
+   ~~~
+  assert condition; // assert 문은 조건을 평가해서 거짓이면 AssertionError를 던진다
+  assert condition : expression; // 표현식 부분이 오류 객체의 메시지가 되는 문자열로 변환된다.
+  ~~~
+ 
+   단정은 기본적으로 비활성화 되있으므로 활성화 시킬려면 -enableassertions 나 -ea 옵션으로 프로그램을 실행해야한다.
+   
+   
+   * 5.3 로깅
    
    
