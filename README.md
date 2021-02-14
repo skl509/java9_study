@@ -1082,4 +1082,241 @@ public static void repeatMessage(String text, int count){
     getSalary/setSalary 쌍은 salary라는 프로퍼티를 만들어야한다. 하지만 접미어의 처음 두글자가 대문자면 그대로 대문자를 써준다.
     
     
+    ## 5.기본 프로그래밍 구조
     
+   * 5.1 예외 처리
+   
+   메서드에서 해야 할일을 할 수 없는 상황이 발생하면, 메서드에서 오류 코드를 반환해야한다.
+   
+   오류코드 반환은 효율적이지 않음으로 자바에서는 예외 처리를 지원하므로 메서드에서 예외를 던지는 방법으로 심각한 문제를 알릴수있다.
+   
+   ~~~
+   public static int randInt(int low, int high){
+    return low + (int) (Math.random() * (high - low + 1));
+   }
+   if(low > high)
+    throw ne IllegalArgumentException(
+        String.format("low should be <= high but low is %d and high is %d", low, high));
+   ~~~
+   randInt(10,5) 를 호출하면 오류 발생이다. 그러니 throw 문을 실행 시켜서 randInt 메서드 실행을 멈추고 호출하는 쪽에 값을 반환하지 않는다.
+   
+   프로그래머가 보고하는 예외는 Exception 클래스의 서브클래스다
+   
+   비검사예외(unchecked excepiton)의 서브클래스이고 다른 예외는 모두 검사 예외(checked exception)이다.
+   
+   ~~~
+   public class FileFormatException extends IOException {
+    public FileFormatException() {}
+    public FileFormatException(String message) {
+        super(message);
+    }
+  /// 연쇄된 예외용 생성자도 추가한다...
+  }
+   ~~~ 
+  많은 예외 클래스 중에 상황에 맞는 예외 클래스를 사용한다.
+  
+   메서드 헤더에 검사 예외 선언을 해야한다.
+   ~~~
+  public void write(Object obj, String filename)
+    throws IOException, ReflectiveOperationException //메서드 헤더에 thorow 문 쓰기
+    ~~~
+    
+    메서드에서 throw 문을 사용하기 위해서든, throws 절이 있는 또 다른 메서드를 호출하기 위해서든 해당 메서드가 던질 수 있는 예외를 모두 나열해야한다.
+    
+    메서드를 오버라이드 할 때 슈퍼클래스 메서드에서 선언한 예외보다 광범위한 검사 예외는 던질 수 없다.
+    
+    ~~~
+    public void write(Object obj, String filename)
+        throws FileNotFoundException
+    ~~~
+    
+    write 메서드를 오버라이드 할때, 그 메서드에서는 그보다 범위가 좁은 예외만 던질 수 있다.
+   
+   예외 잡기를 할려면 try 블록을 사용해야한다.
+   
+   ~~~
+   try{
+    statements
+    } catch (ExceptionClass ex){
+        handler
+        }
+    ~~~
+    
+    try 블록에 들어있느 statements를 실행하다가 주어진 예외클래스가 일어나면 제어가 handler로 이동한다.
+    
+    이 구조를 2가지로 바꿀 수 있다.
+    
+    ~~~
+    1.
+    try {
+        statements
+        } catch (ExceptionClass1 ex){
+            handler1
+            } catch (ExceptionClass2 ex){
+                handler2
+                } catch (ExceptionClass3 ex){
+                    }
+     ~~~
+     catch 절 부터 일치하는 예외 타입을 찾고 없으면 내려온다, 위쪽 부터 가장 상세한 예외클래스를 배치한다
+    
+     ~~~
+      2.
+      try {
+        statements
+        } catch (ExceptionClass2 :(짝대기 긴거 2개 가운데 점있는거) ExceptionClass2 : ExceptionClass3 ex){
+        handler
+        }
+     ~~~
+        
+   이경우 핸들러는 나열된 예외 클래스에 공통으로 있는 메서드만 예외 변수 ex로 호출 할 수 있다.
+   
+   
+   예외처리가 필요한 문제 중 하나는 리소스 관리이다.
+   
+   ~~~
+   ///파일에 쓰기를 수행하고, 수행이 완료하면 파일을 닫는다...
+   ArrayList<String> lines = ...;
+   PrintWriter out = new PrintWriter("output.txt");
+   for (String line : lines) {
+    out.println(line.toLowerCase());
+    }
+    out.close();
+    ~~~
+    
+    이 코드는 어떤 메서든 예외를 던지면 out.close()가 호출되지 않는다. 
+    
+    이런 상황은 좋지않다, 예외가 여러번 일어나서 시스템이 파일핸들을 소진 시킬 수 있기 때문이다.
+    
+    ~~~
+    ArrayList<String> lines = ...;
+    try (PrintWriter out = new PrintWriter("output.txt")){// 변수선언
+        for (String line : lines)
+            out.println(line.toLowerCase());
+            }
+    ~~~
+    
+    try 문 헤더에 리소스를 지정 할 수 있다. 리소스에 반드시 AutoCloseable 인터페이스를 구현하는 클래스에 속해야한다.
+    
+    ~~~
+    try (PrintWriter out = new PrintWriter("output.txt"){
+        for (String line : lines){
+            out.println(line.toLowerCase());
+            }
+         }// out.close()가 호출된다.
+    ~~~
+    정상적으로 try 블록의 끝에 이르렀든 예외가 일어났든 간에 try 블록이 끝날 때 리소스 객체의 close 메서드가 호출된다.
+    
+    ~~~
+    try (Scanner in = new Scanner(Paths.get("/usr/share/dict/words")); // 리소스1 지정
+            printWriter out = new PrintWriter("output.txt")){   // 리소스2 지정
+            while (in.hasNext())
+                out.println(in.next().toLowerCase());
+                }
+    ~~~
+    
+    여러 리소스를 세미콜론으로 구분해 선언 할 수 있다.
+    
+    리소스는 초기화 순ㅅ의 역순으로 닫는다, out.close()가 in.close() 보다 먼저 호출된다
+    
+    PrintWriter 생성자에서 예외를 던진다 할때, 이시점에서 in은 이미 초기화 되었지만 out은 아니다.
+    
+    try문은 in.close()를 호출하고 예외를 전파한다.
+    
+    finally 절은 정상적으로든 예외가 일어나든 try 블록이 끝날 때 실행된다.
+    
+    ~~~
+    try {
+        작업을 수행한다.
+        } finally {
+            정리 작업을 한다.
+            }
+    ~~~
+    
+    이런 패턴은 잠금을 획득,해제하거나 카운터를 증가,감소시킬 때 스택에 무언가를 넣었다가 작업을 마치고 꺼낼 때 사용한다.
+    
+   finally 절에서는 예외를 던지면 안된다, try 블록의 바디가 예외를 종료하더라도 finally 절에 일어난 예외로 덮어쓰기 때문이다.
+   
+   finally 절에서는 return 문도 작성하면 안된다. 이유는 이하동문이다.
+   
+   예외를 어디에서도 잡지 않으면 스택 추적이 표시된다.
+   
+   예외의 스택추적내용을 저장 하고 싶을때는 다음 문자열에 집어넣으면 된다.
+   
+   ~~~
+   ByteArrayOutputStream out = new ByteArrayOutputStream();
+   ex.printStactTrace(new PrintWriter(out));
+   String descripton = out.toString();
+   ~~~
+         
+   * 5.2 단정
+   
+   단정은 일반적으로 사용하는 방어적 프로그래밍 방법이다.
+   
+   ~~~
+   double y = Math.sqrt(x); //특정 프로퍼티가 채워졌다고 확산하는 코드에서 해당 프로퍼티에 의존한다...
+   if (x<0) throw new IllegalStateExeption(x + " < 0 ");
+   ~~~ 
+   
+   이때 x는 음수가 아니라고 확신한다, 그럼에도 계산에서는 숫자가 아닌 부동소수점 값이 나타나지 않도록 확인해야한다
+   
+   하지만 이 조건문은 테스트를 마친 후에도 프로그램에 남아서 실행을 느리게 한다, 단정 메커니즘을 이용하면 테스트 중에만 검사를 하고, 제품용 코드에서는 자동으로 삭제 할 수 있다.
+    
+   단정 사용 형태는 두가지이다.
+   
+   ~~~
+  assert condition; // assert 문은 조건을 평가해서 거짓이면 AssertionError를 던진다
+  assert condition : expression; // 표현식 부분이 오류 객체의 메시지가 되는 문자열로 변환된다.
+  ~~~
+ 
+   단정은 기본적으로 비활성화 되있으므로 활성화 시킬려면 -enableassertions 나 -ea 옵션으로 프로그램을 실행해야한다.
+   
+   
+   * 5.3 로깅
+   
+   로깅 시스템은 기본 로거를 이용한다 정보 메시지를 로그로 기록할 때는, info 메서드를 사용한다.
+   
+   ~~~
+   Logger.getGlobal().info("Opening file " + filename);
+   // Aug 04, 2014 09:53:34 AM com.mycompany.Myclass read InFO: Opening file data.txt
+   ~~~
+   
+   로그를 기록한 시각과 호출 클래스나 메서드의 이름이 자동으로 포함된다.
+   
+   전문적인 애플리케이션에서는 보통 전역 로거 하나로 모든 레코드를 로그로 기록하려고 하지 않는다.
+   
+   그 대신 로거를 직접 정의해서 사용한다.
+   
+   ~~~
+   Logger logger = Logger.getLogger("com.mycompany.myapp");
+   ~~~
+   
+   이후 같은 이름으로 로거를 요청하면 같은 로거 객체를 얻는다.
+   
+   로깅 레벨은 일곱 가지로 SEVER, WARNING , INFO , COFIG, FINE, FINER, FINEST가 있다. 기본설정으로 상위 레벨 세 개만 로그로 기록한다.
+   
+   ~~~
+   logger.setLevel(Leval.FINE);
+   ~~~
+   
+   FINE 이상인 레벨을 모두 로그로 기록한다
+   
+   구성 파일을 편집하면 로깅 시스템의 다양한 ㅡ로퍼티를 변경할 수 있다. 기본 구성 파일은 conf/logging.properties다.
+   
+   다른 파일을 사용하려면 애플리케이션을 시작할때 java.util.logging.config.file 프로퍼티를 원하는 파일 위치로 설정해야한다.
+   
+   직접 만든 로거의 로깅 레벨을 지정할 수 있다.
+   
+   ~~~
+   com.mycompany.myapp.level = FINE
+   ~~~
+   
+   로그 핸들러는 콘솔에 메시지를 보낸다.
+   
+   로거와 마찬가지로 로그 핸들러에게도 로깅 레벨이 있다.
+   
+   레코드를 로그로 기록하려면 헤당 레코드의 로깅 레벨이 로거와 핸들러의 임계값 이상이여야 한다.
+   
+   로깅 레벨로 필터링하는 방법 외에도 Filter 인터페이스를 구현한 필터를 로거나 핸들러에 추가로 설치해 필터링 하는 방법도 있다.
+   
+   
+   
