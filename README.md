@@ -1318,5 +1318,216 @@ public static void repeatMessage(String text, int count){
    
    로깅 레벨로 필터링하는 방법 외에도 Filter 인터페이스를 구현한 필터를 로거나 핸들러에 추가로 설치해 필터링 하는 방법도 있다.
    
+   ## 6.제네릭 프로그래밍
+   
+   * 6.1 제네릭 클래스
+   
+   제네릭 클래스는 타입 매개변수가 한 개 이상 있는 클래스다
+   
+   ~~~
+   public class Entry<K, V>{
+    private K key; // 인스턴스 변수
+    private V value;
+    
+    public Entry(K key, V value){// 메서드 매개변수
+        this.key = key;
+        this.value = value;
+    }
+   public K geKey() { return key; } //반환값
+   public V getValue() { return value;}
+   
+   }
+   ~~~
+   클래스 이름(Entry) 뒤에 오는 <> 안에 타입 매개변수 K,V 
+   
+   이 타입 매개변수들은 클래스 멤버를 정의 할 때 인스턴스 변수, 메서드 매개변수, 반환 값의 타입으로 사용된다
+   
+   타입 변수를 원하는 타입으로 교체해 제네릭 클래스를 인스턴스화 한다.
+   
+   Entry<String, Integer> 는 String getKey() 와 Integer getValue()메서드를 가진 평범한 클래스다.
+    
+   제네릭 클래스의 객체를 생성 할 때 생성자의 타입 매개변수를 생략 할 수 가 있다
+   
+   ~~~
+   Entry<String, Integer> entry = new Entry<>("Fred" , 42);
+   // new Entry<String, Integer>("Fred" , 42) 와 같다, string, Integer 생략...
+   ~~~
+   
+   이때 생성 인수 앞에 빈<>를 작성해야한다, 이 빈 <>를 다이아몬드(문법)라고 도 한다
+
+    * 6.2 제네릭 메서드
+    
+    제네릭 메서드는 타입 매개변수를 받는 메서드다, 제네릭 메서드는 일반 클래스나 제네릭 클래스에 속 할 수 있다.
+    
+    ~~~
+    public class Arrays { // 제네릭이 아닌 클래스에 속한 제네릭 메서드
+        public static <T> void swap(T[] array, int i, int j){
+        T temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+      }
+    }    
+    ~~~     
+    
+    배열에 들어 있는 요소의 타입이 기본 타입만 아니라면 swap 메서드로 임의의 배열에 들어 있는 요소를 교환 할 수 있다
+    
+    ~~~
+    String [] friends = ...;
+    Arrays.swap(friends, 0, 1);
+    ~~~
+    
+    제네릭 메서드를 선언 할 때는 타입 매개변수를 제어자(public , static)와 반환 타입 사이에 두어야 한다
+    
+    ~~~
+    public static <T> void swap(T[] array, int i, int j) // 제네릭 메서드 <T>
+    ~~~
+    
+    제네릭 메서드를 호출 할 때는 타입 매개변수를 명시 하지 않아도 된다
+    
+    ~~~
+    1.String [] friends = ...;
+    2.Arrays.swap(friends, 0, 1);
+    ~~~
+    
+   1번 호출에서 friends의 타입이 String[]이므로 컴파일러가 T가 String이라고 추론하기 때문에 메서드 이름 앞에 타입을 명시적으로 지정해도 된다.
+   
+   * 6.3 타입 경계
+   
+   제네릭 클래스나 제네릭 메서드가 받는 타입 매개변수의 타입을 제한해야 할 때 도 있다.
+   
+   이때 타입 경계를 지정하면 타입이 특정 클래스를 확장하거나 특정 인터페이스를 구현 할 수 있다.
+   
+   ~~~
+   public static <T extends AutoCloseable> void closeALL(Arraylist<T> elems)
+    throws Exception {
+   for (T elem : elems) elem.close();
+   }
+   ~~~
+   
+   타입 경계 extends AutoCloseable은 요소 타입이 AutoCloseable의 서브 타입임을 보장
+   
+   elem.close() 호출이 유효하다
+   
+   이 메서드에 ArrayList<PrintStream>은 전달 할 수 있지만, ArrayList<String>은 전달 할 수 없다.
+    
+    타입경계에서 extneds 키워드는 서브타입을 의미한다
+    
+    * 6.4 타입 가변성과 와일드 카드
+    
+    서로 다른 배열 리스트 사이에서 변환하는 일은 대부분 안전하다, 메서드에서 배열 리스트에 쓰기를 전혀 수행하지 않아 인수로 전달된 배열 리스트를 변경하지 않는다고 하자
+    
+    ~~~
+    public static void printNames(ArrayList<? extends Employee> staff{
+        for (int i = 0; i < staff.size(); i++){
+            Employee e = staff.get(i);
+            System.out.println(e.getName());
+            }
+            }
+     ~~~
+     
+     와일드카드 타입 ? extends Employee는 미지의 Employee 서브타입을 가르킨다
+     
+     ArrayList<Employee> 나 Arraylist<Manager>같은 서브타입의 배열 리스트로 printNames 메서드를 호출 할 수 있다
+    
+    ? 타입이 무엇을 나타내든 Employee의 서브 타입이다. 그러므로 staff.get(i)의 결과를 Employee 변수 e에 할당 할 수 있다.
+    
+    결론적으로 ? extends Employee를 Employee 로 변환 할 수 있지만, 그 어떤 것 도 ? extends Employee 로는 변활 할 수 없다.(가역이 안된다)
+  
+   슈퍼 타입을 나타내는 와일드 카드 타입은 ? super Employee 다
+   
+   일반적으로 제네릭 함수형 인터페이스를 메서드 매개변수로 받을 때는 super 와일드카드를 사용해야한다.
+   
+   * 6.5 자바 가상 머신에서 보는 제네릭
+   
+   제네릭 타입을 정희하면 해당 타입은 로(raw) 타입 으로 컴파일 된다
+   
+   ~~~
+   public class Entry {
+    private Object key;
+    prvate Object value;
+    
+        public Entry(Object key, Object value) {
+            this.key = key;
+            this.value = value;
+            }
+            
+           public Object getKey() { return key; }
+           public Object getValue() { return value;}
+           }
+            
+    ~~~
+    
+    타입변수에 경계가 있으면 첫 번째 경계로 교체된다
+    
+    ~~~
+    public class Entry<K extends Comparable<? super K> & Serializable, V extends Serializable> //이렇게 한다면
+    
+    public class Entry { // 클래스가 교체된다...
+        private Comparable key;
+        private Serializable value;
+        ...
+        }
+    ~~~    
+   
+    * 6.6 제네릭의 제약
+    
+    기본 타입 인수를 사용할 수 없다
+    
+    ex) ArrayList<int>는 만들 수 없다 그 대신 로(raw)타입인 ArrayList 만 있다
+    
+    실행 시간에는 모든 타입이 로 형태다
+   
+   타입 변수를 인스턴스화 할 수 없다
+   
+   ex) 타입변수는 T(...) 또는 new T[...] 같은 표현식에 사용 할 수 없다.
+   
+   매개변수화된 타입의 배열을 생성 할 수 없다
+   
+   ~~~
+   Entry<String, Integer>[] entries = new Entry<String, Integer>[100];
+   // 오류 - 제네릭 ㅓㅁ포넌트 타입으로 구성된 배열은 생성할 수 없다.
+   ~~~
+   
+   ex) 타입이 소거된 후 배열생성자가 로 Entry 배열을 생성할 것이므로 이런 식으로 생성 못한다, 로 Entry 배열이 생성되면
+   
+   Entry<Employee, Manager> 같은 모든 타입의 Entry 객체를 ArrayStoreException 없이 추가 할 수 있기 때문이다
+   
+   정적 컨텍스트에서 클래스 타입 변수가 유효하지 않다
+   
+   ~~~
+   public class Entry<K, V>{
+    private static V defaultValue;
+    // 오류 - 정적 컨텍스트에서 V를 사용했다.
+    public static void setDefault(V value) { defaultValue = value; }
+    // 오류 - 정적 컨텍스트에서 V를 사용했따.
+    
+    }
+    ~~~
+    결국 타입 소거는 소거된 Entry 클래스에 이런 종류의 변수나 메서드가 K와 V별로 있지 않고 오직 한 개만 있다는 것을 의미한다
+    
+    메서드가 소거 후 충돌하지 않을 수도 있다
+    
+    ex)타입 소거 후 충돌을 일으킬 수 있는 메서드는 선언하지 말아야한다
+    
+    ~~~
+    public interface Ordered<T> extends Comparable<T> {
+        public defalut boolean equals(T value) {
+        // 오류 - 소거 결과 Object.equals와 충돌한다.
+        return compareTo(value) == 0;
+        }
+        ...
+        }
+    ~~~
+    
+    equal(T value) 메서든s equals(Object value)로 소거되어 OBject의 equals 메서드와 충돌한다.
+    
+    제네릭 클래스의 객체는 예외로 던지거나 잡을 수 없다. 사실 Throwable의 제네릭 서브클래스조차 만들 수 없다
+    
+    * 6.7 리플렉션과 제네릭
+    
+        제네릭 클래스와 제네릭 메서드의 헤더는 지워지지 않으므로 리플렉션으로 접근 할 수 있다.
    
    
+   
+   
+    
