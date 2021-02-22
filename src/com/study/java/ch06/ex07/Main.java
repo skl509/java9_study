@@ -14,12 +14,6 @@ class Pair<E extends Comparable<E>> { //객체 정렬 메서드 comparable
         this.first = first;
         this.second = second;
     }
-    public E getFirst() {
-        return first;
-    }
-    public E getSecond() {
-        return second;
-    }
     public E max() {
         if (first.compareTo(second) >= 0) { //compareTo 정렬에서 람다식으로 비교함, 현재 객체 > 파라미터로 넘어온 객체 , -> 양수리턴(최댓값 결정)
             return first;
