@@ -26,7 +26,7 @@ public class PrimitiveTypeStreams {
     }
 
     public static void main(String[] args) throws IOException {
-        IntStream is1 = IntStream.generate(() -> (int) (Math.random() * 100));
+        IntStream is1 = IntStream.generate(() -> (int) (Math.random() * 100));//기본 타입 스트림
         show("is1", is1);
         IntStream is2 = IntStream.range(5, 10);
         show("is2", is2);

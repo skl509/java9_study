@@ -75,12 +75,12 @@ public class OptionalDemo {
         System.out.print(optionalValue.orElse("No word") + " contains fred");
 
         Optional<String> optionalString = Optional.empty();
-        String result = optionalString.orElse("N/A");
+        String result = optionalString.orElse("N/A");//옵션 값으로 래핑된 문자열 또는 문자열이 없으면
         System.out.println("result: " + result);
-        result = optionalString.orElseGet(() -> System.getProperty("user.dir"));
+        result = optionalString.orElseGet(() -> System.getProperty("user.dir"));//기본값 계산하는 코드, 필요할 때만 함수 호출된다
         System.out.println("result: " + result);
         try {
-            result = optionalString.orElseThrow(IllegalStateException::new);
+            result = optionalString.orElseThrow(IllegalStateException::new);//예외 객체 돌려주는 메서드 전달
             System.out.println("result: " + result);
         } catch (Throwable t) {
             t.printStackTrace();

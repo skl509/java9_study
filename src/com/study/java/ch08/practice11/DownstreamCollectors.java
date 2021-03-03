@@ -47,12 +47,12 @@ public class DownstreamCollectors {
         Stream<Locale> locales = Stream.of(Locale.getAvailableLocales());
         locales = Stream.of(Locale.getAvailableLocales());
         Map<String, Set<Locale>> countryToLocaleSet = locales.collect(
-           groupingBy(Locale::getCountry, toSet()));
+           groupingBy(Locale::getCountry, toSet()));// 리스트 대신 집합이 필요할때 toSet.기능 이용
         System.out.println("countryToLocaleSet: " + countryToLocaleSet);   
 
         locales = Stream.of(Locale.getAvailableLocales());
         Map<String, Long> countryToLocaleCounts = locales.collect(
-           groupingBy(Locale::getCountry, counting()));
+           groupingBy(Locale::getCountry, counting()));// counting, 모은 요소의 개수를 센다
         System.out.println("countryToLocaleCounts: " + countryToLocaleCounts);   
 
         Stream<City> cities = readCities("cities.txt");
@@ -77,7 +77,7 @@ public class DownstreamCollectors {
         locales = Stream.of(Locale.getAvailableLocales());
         Map<String, Set<String>> countryToLanguages = locales.collect(
            groupingBy(Locale::getDisplayCountry, 
-              mapping(Locale::getDisplayLanguage,
+              mapping(Locale::getDisplayLanguage,// mapping 컬렉터는 함수를 다운스트림 결과에 적용하며, 이 결과를 처리할 또 다른 컬렉터를 받음
                  toSet())));
         System.out.println("countryToLanguages: " + countryToLanguages);   
 

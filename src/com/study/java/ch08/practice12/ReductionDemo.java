@@ -15,7 +15,7 @@ public class ReductionDemo {
                 4, 3, 3, 8, 3, 2, 7, 9, 5, 0, 2, 8, 8, 4, 1, 9, 7, 1, 6, 9, 3, 9, 9, 3, 7, 5, 1, 0,
                 5, 8, 2, 0, 9, 7, 4, 9, 4, 4, 5, 9, 2, 3, 0, 7, 8, 1, 6, 4, 0, 6, 2, 8, 6 };
         Stream<Integer> values = Stream.of(digits);
-        Optional<Integer> sum = values.reduce((x, y) -> x + y);
+        Optional<Integer> sum = values.reduce((x, y) -> x + y);// reduce 메서드는 스트림에서 값을 계산하는 일반적 메커니즘
         System.out.println("sum: " + sum);
 
         values = Stream.empty();

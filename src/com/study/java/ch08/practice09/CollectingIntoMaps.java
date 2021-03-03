@@ -36,7 +36,7 @@ public class CollectingIntoMaps {
         System.out.println("idToName: " + idToName);
 
         Map<Integer, Person> idToPerson = people().collect(
-                Collectors.toMap(Person::getId, Function.identity()));
+                Collectors.toMap(Person::getId, Function.identity()));// 값이 실제 요소여야 할때는 두 번째 함수로Function.identity()를 사용
         System.out.println("idToPerson: " + idToPerson.getClass().getName() + idToPerson);
 
         idToPerson = people().collect(

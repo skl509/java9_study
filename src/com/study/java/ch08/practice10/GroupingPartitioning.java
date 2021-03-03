@@ -11,7 +11,7 @@ public class GroupingPartitioning {
     public static void main(String[] args) throws IOException {
         Stream<Locale> locales = Stream.of(Locale.getAvailableLocales());
         Map<String, List<Locale>> countryToLocales = locales.collect(Collectors
-                .groupingBy(Locale::getCountry));
+                .groupingBy(Locale::getCountry));// 그루핑의 분류함수, 국가 코드에 해당하는 로케일을 모두 조회가능하다
         System.out.println("Swiss locales: " + countryToLocales.get("CH"));
 
         locales = Stream.of(Locale.getAvailableLocales());

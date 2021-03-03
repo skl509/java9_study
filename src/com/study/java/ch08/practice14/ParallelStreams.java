@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
-public class ParallelStreams {
+public class ParallelStreams {// 10장 병행프로그래밍에서 자세히 다룬다
     public static void main(String[] args) throws IOException {
         String contents = new String(Files.readAllBytes(
                 Paths.get("alice.txt")), StandardCharsets.UTF_8);

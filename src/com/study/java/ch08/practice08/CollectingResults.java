@@ -66,6 +66,6 @@ public class CollectingResults {
         System.out.println("Average word length: " + averageWordLength);
         System.out.println("Max word length: " + maxWordLength);
 
-        noVowels("alice.txt").limit(10).forEach(System.out::println);
+        noVowels("alice.txt").limit(10).forEach(System.out::println);//foreach 메서드, 요소를 임의의 순서로 순회
     }
 }

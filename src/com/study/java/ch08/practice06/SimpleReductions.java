@@ -15,10 +15,10 @@ public class SimpleReductions {
         List<String> words = Arrays.asList(contents.split("\\PL+"));
 
         Optional<String> largest = words.stream().max(String::compareToIgnoreCase);
-        System.out.println("largest: " + largest.orElse(""));
+        System.out.println("largest: " + largest.orElse(""));// 스트림 최댓값얻기
 
         boolean aWordStartsWithQ = words.stream().anyMatch(s -> s.startsWith("Q"));
-        System.out.println("aWordStartsWithQ: " + aWordStartsWithQ);
+        System.out.println("aWordStartsWithQ: " + aWordStartsWithQ);//단순 일치하는 요소가 있는지 알고싶을땐 anyMath이용
 
         Optional<String> startsWithQ = words.stream().parallel().filter(s -> s.startsWith("Q")).findAny();
         System.out.println("startsWithQ: " + startsWithQ.orElse("(None)"));

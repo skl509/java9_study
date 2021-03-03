@@ -32,11 +32,11 @@ public class ExtractingCombining {
     }
 
     public static void main(String[] args) throws IOException {
-        Stream<Double> randoms = Stream.generate(Math::random).limit(5);
+        Stream<Double> randoms = Stream.generate(Math::random).limit(5);//난수 5개가 든 스트림
         show("randoms", randoms);
 
         String contents = "   Hello, World!   ";
-        Stream<String> words = Stream.of(contents.split("\\PL+")).skip(1);
+        Stream<String> words = Stream.of(contents.split("\\PL+")).skip(1);//split 메서드 동작방식때문에 skip 호출해 불필요한 요소 사라지게함
         show("words", words);
         
 

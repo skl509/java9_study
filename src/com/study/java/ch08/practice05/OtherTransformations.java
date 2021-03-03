@@ -27,6 +27,8 @@ public class OtherTransformations {
     public static void main(String[] args) throws IOException {
         Stream<String> uniqueWords = Stream.of("merrily", "merrily", "merrily", "gently")
                 .distinct();
+        //distinct 메서드 , 원본 스트림에 있는 요소의 중복을 제외하고 같은 순서로 돌려주는 스트림을 반환
+        // merrily만 보존한다
         show("uniqueWords", uniqueWords);
 
         String contents = new String(Files.readAllBytes(Paths.get("alice.txt")),
