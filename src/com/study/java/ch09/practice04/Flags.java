@@ -18,7 +18,7 @@ public class Flags {
     }
     
     public static void showMatches(String regex, int flags, String input) {
-        Pattern pattern = Pattern.compile(regex, flags);
+        Pattern pattern = Pattern.compile(regex, flags); //일반적인 정규표현식 활용 사례, 루프이용
         Matcher matcher = pattern.matcher(input);
         System.out.printf("%-30s%-30s", regex, input);
         while (matcher.find()) {

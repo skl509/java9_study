@@ -16,9 +16,9 @@ import java.util.Map;
 public class PostDemo {
     public static void main(String[] args) throws IOException {
         URL url = new URL("http://codecheck.it/check");
-        URLConnection connection = url.openConnection();
-        connection.setRequestProperty("Accept-Charset", "UTF-8");
-        connection.setDoOutput(true);
+        URLConnection connection = url.openConnection(); //urlconnection 객체 얻는다
+        connection.setRequestProperty("Accept-Charset", "UTF-8");//요청 프로퍼티를 설정한다
+        connection.setDoOutput(true); //서버로 데이터를 보낸다
         try (Writer out = new OutputStreamWriter(
                 connection.getOutputStream(), "UTF-8")) {
             Map<String, String> postData = new HashMap<>();
@@ -37,9 +37,9 @@ public class PostDemo {
             }
         }
         
-        Map<String, List<String>> headers = connection.getHeaderFields();
+        Map<String, List<String>> headers = connection.getHeaderFields(); //헤더 정보를 질의한다
         System.out.println("Response headers: " + headers);
-        try (InputStream in = connection.getInputStream()) {
+        try (InputStream in = connection.getInputStream()) {//응답을 읽는다
             String contents = new String(readAllBytes(in));
             System.out.println(contents);
         }

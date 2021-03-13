@@ -18,7 +18,7 @@ public class MemoryMappedFileDemo {
             ByteBuffer buffer = channel.map(FileChannel.MapMode.READ_WRITE,
                     0, channel.size());
             buffer.order(ByteOrder.LITTLE_ENDIAN);
-            int size = buffer.getInt(2);
+            int size = buffer.getInt(2);//값을 읽을때 get, getint,getdouble 메서드 사용
             int headerSize = buffer.getInt(14);
             int width = buffer.getInt(18);
             int height = buffer.getInt(22);

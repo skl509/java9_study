@@ -13,15 +13,15 @@ import java.nio.file.Paths;
 
 public class BinaryIO {
     public static void main(String[] args) throws IOException {
-        Path path = Paths.get("chart.bmp");
-        try (InputStream inStream = Files.newInputStream(path)) {            
+        Path path = Paths.get("chart.bmp");//경로 정의하기
+        try (InputStream inStream = Files.newInputStream(path)) {   //파일에서 스트림 얻기
             DataInput in = new DataInputStream(inStream);
             byte[] header = new byte[2];
             in.readFully(header);
             int size = swap(in.readInt());
             in.readInt();
             in.readInt();
-            int headerSize = swap(in.readInt());
+            int headerSize = swap(in.readInt()); // 숫자, 문자, 불값, 문자열을 바이너리 형식으로 쓰는 메서드
             int width = swap(in.readInt());
             int height = swap(in.readInt());
             short planes = swap(in.readShort());

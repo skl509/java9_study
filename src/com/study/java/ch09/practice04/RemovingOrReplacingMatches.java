@@ -17,11 +17,11 @@ public class RemovingOrReplacingMatches {
         System.out.println(tokenStream.collect(Collectors.toList()));
         
         Matcher matcher = commas.matcher(input);
-        String result = matcher.replaceAll(",");
+        String result = matcher.replaceAll(","); //정규 표현식의 모든 일치 항목을 문자열로 교체
         System.out.println(result);
         
         Pattern time = Pattern.compile("(\\d{1,2}):(\\d{2})");
-        matcher = time.matcher("3:45");
+        matcher = time.matcher("3:45");//교체 문자열에 그룹 번호나 그룹이름을 넣을 수 있다
         result = matcher.replaceAll("$1 hours and $2 minutes");
         System.out.println(result);
         
